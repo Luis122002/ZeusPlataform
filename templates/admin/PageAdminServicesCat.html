@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'Headerfield.html' %}
+<html>
+    <Head>
+        <meta charset="uft-8"/>
+        <title>paginaAdmin</title>
+        <link rel="icon" type="image/png" href="{% static 'img/icon_zeus_clean.png' %}"/>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </Head>
+    <body class='container mt-5'>
+        <div class="alert alert-info dispaly-1 text-center">Enlazar Categoria</div>
+        <br/>
+
+        <form method = 'post'>
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="submit" value="Asignar" class "btn btn-info"/>
+        </form>
+        <br/>
+        <a href="/admin" class "btn btn-info">Regresar</a>
+    </body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'Headerfield.html' %}
+<html>
+    <Head>
+        <meta charset="uft-8"/>
+        <title>paginaAdmin</title>
+        <link rel="icon" type="image/png" href="{% static 'img/icon_zeus_clean.png' %}"/>
+    </Head>
+    <body class='container mt-5'>
+        <div class="alert alert-info dispaly-1 text-center">Sitio de administrador</div>
+        <br/><br/>
+
+        <button onclick="(showUsers())">Usuarios</button>
+        <button onclick="(showService())">servicios</button>
+        <button onclick="(showCategory())">Categorias de servicios</button>
+        <button onclick="(showAcquireService())">Solicitud de servicios</button>
+
+        <div name='panelServicios'>
+            <br/>
+            {% if datos2 %}
+            <table class="table table-striped table-inverse table-responsive">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Nombre de servicio</th>
+                        <th>Descripcion de servicio</th>
+                        <th>Precio estimado</th>
+                        <th>Categoria</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in datos2 %}
+                         <tr>
+                            <td>{{x.Nombre_servicio}}</td>
+                            <td>{{x.Descripcion_servicio}}</td>
+                            <td>{{x.Precio_estimado}}</td>
+                            <td>
+                                {% if datos3 %}
+                                    {% for y in datos3 %}
+                                        {% if y.Servicios == x %}
+                                        -{{y.Categoria}}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                               Ninguna categoria asignada
+                                {% endif %}
+                            -</td>
+                            <td><a href="admin/editServicio/{{dato.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
+                            <td><a href="admin/deletServicio/{{dato.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>     
+            {% else %}
+            <div class="alert alert-info">No hay servicios que mostrar</div>
+            {% endif %}
+            <a href="/admin/addServices">Agregar servicios</a>
+            <a href="/admin/linkedService">Agregar categorias</a>
+        </div>
+
+        <div name='panelCategoria' >
+            <br/>
+            {% if datos1 %}
+            <table class="table table-striped table-inverse table-responsive">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Nombre de categoria</th>
+                        <th>Descripcion de categoria</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in datos1 %}
+                         <tr>
+                            <td>{{x.Nombre_categoria}}</td>
+                            <td>{{x.Descripcion_categoria}}</td>
+                            <td><a href="admin/editCategoria/{{x.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
+                            <td><a href="admin/deletCategoria/{{x.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>     
+            {% else %}
+            <div class="alert alert-info">No hay categorias que mostrar</div>
+            {% endif %}
+            <a href="/admin/AddCategory">Agregar categoria</a>
+            
+        </div>
+
+        <div name='panelUsuarios' >
+            <br/>
+            {% if datos0 %}
+            <table class="table table-striped table-inverse table-responsive">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Nombre de Usuario</th>
+                        <th>Rut</th>
+                        <th>Permiso administrador</th>
+                        <th>Permiso trabajador</th>
+                        <th>Correo</th>
+                        <th>Clave</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in datos0 %}
+                         <tr>
+                            <td>{{x.first_name}}  {{x.last_name}}</td>
+                            <td>{{x.username}}</td>
+                            <td>{{x.is_superuser}}</td>
+                            <td>{{x.is_trabajador}}</td>
+                            <td>{{x.email}}</td>
+                            <td>{{x.password}}</td>
+                            <td><a href="admin/editCategoria/{{x.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
+                            <td><a href="admin/deletCategoria/{{x.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>     
+            {% else %}
+            <div class="alert alert-info">No hay categorias que mostrar</div>
+            {% endif %}
+            <a href="/admin/AddCategory">Agregar categoria</a>
+            
+        </div>
+
+        <div name='panelSolicitud' >
+            <br/>
+            {% if datos4 %}
+            <table class="table table-striped table-inverse table-responsive">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Nombre de cliente</th>
+                        <th>Direccion</th>
+                        <th>Telefono de contacto</th>
+                        <th>Fecha solicitada</th>
+                        <th>Tipo de servicio</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in datos4 %}
+                         <tr>
+                            <td>{{x.Nombre_cliente}}</td>
+                            <td>{{x.Direccion_limpieza}}</td>
+                            <td>{{x.telefono_contacto}}</td>
+                            <td>{{x.Fecha_servicio}}</td>
+                            <td>{{x.Servicios}}</td>
+                            <td><a href="admin/editCategoria/{{x.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
+                            <td><a href="admin/deletCategoria/{{x.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>     
+            {% else %}
+            <div class="alert alert-info">No hay categorias que mostrar</div>
+            {% endif %}
+            <a href="/admin/AddCategory">Agregar categoria</a>
+            
+        </div>
+        <br/><br/>
+        <a href="../Exit" class "btn btn-info">Salir</a>
+        
+
+    </body>
+    <script>
+
+        let showServicios = false
+        let showCategoria = false
+        let showUsuarios = false
+        let showSolicitud = false
+        var divServicios = document.querySelector("[name='panelServicios']")
+        var divCategoria = document.querySelector("[name='panelCategoria']")
+        var divUsuarios = document.querySelector("[name='panelUsuarios']")
+        var divSolicitud = document.querySelector("[name='panelSolicitud']")
+
+        let showService = () =>
+        {
+            console.log("adios")
+            showServicios = !showServicios
+            if(showServicios)
+            {
+                divServicios.style.display = "block"
+            }
+            else
+            {
+                divServicios.style.display = "none";
+            }
+            showCategoria = false
+            showUsuarios = false
+            showSolicitud = false
+            divCategoria.style.display = "none";
+            divUsuarios.style.display = "none";
+            divSolicitud.style.display = "none";
+        }
+
+        let showCategory = () =>
+        {
+            showCategoria = !showCategoria
+            if(showCategoria)
+            {
+                divCategoria.style.display = "block"
+            }
+            else
+            {
+                divCategoria.style.display = "none";
+            }
+            showSolicitud = false
+            showServicios = false
+            showUsuarios = false
+            divServicios.style.display = "none";
+            divUsuarios.style.display = "none";
+            divSolicitud.style.display = "none";
+        }
+        let showUsers = () =>
+        {
+            showUsuarios = !showUsuarios
+            if(showUsuarios)
+            {
+                divUsuarios.style.display = "block";
+            }
+            else
+            {
+                divUsuarios.style.display = "none";
+            }
+            showSolicitud = false
+            showServicios = false
+            showCategoria = false
+            divServicios.style.display = "none";
+            divCategoria.style.display = "none";
+            divSolicitud.style.display = "none";
+        }
+
+        let showAcquireService = () =>
+        {
+            console.log("adios")
+            showSolicitud = !showSolicitud
+            if(showSolicitud)
+            {
+                divSolicitud.style.display = "block"
+            }
+            else
+            {
+                divSolicitud.style.display = "none";
+            }
+            showCategoria = false
+            showUsuarios = false
+            showServicios = false
+            divCategoria.style.display = "none";
+            divUsuarios.style.display = "none";
+            divServicios.style.display = "none";
+        }
+
+
+        let started = () =>
+        {
+            console.log("Biembenido admin")
+            divServicios.style.display = "none";
+            divCategoria.style.display = "none";
+            divSolicitud.style.display = "none";
+            divUsuarios.style.display = "none";
+        }
+        started()
+
+    </script>
+</html>
