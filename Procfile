@@ -1,1 +1,1 @@
-web: pi manage.py migrate && gunicorn ZeusPlataform.wsgi
+web: python manage.py migrate && gunicorn ZeusPlataform.wsgi
