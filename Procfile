@@ -1,0 +1,1 @@
+web: python manage.py migrae && gunicorn ZeusPlataform.wsgi

@@ -77,11 +77,16 @@ WSGI_APPLICATION = 'ZeusPlataform.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Zeus_Clean_db',
-        'USER':'root'
+        'NAME': 'railway',
+        'USER':'root',
+        'PASSWORD':'F6-dE26Ca2HACe4Ce2cEHFcAgD-FaaEa',
+        'HOST':'viaduct.proxy.rlwy.net',
+        'PORT':'47495'
     }
 }
 
