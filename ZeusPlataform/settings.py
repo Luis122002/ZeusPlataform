@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'ZeusPlataform.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'railway',
-        'USER':'root',
-        'PASSWORD':'F6-dE26Ca2HACe4Ce2cEHFcAgD-FaaEa',
-        'HOST':'viaduct.proxy.rlwy.net',
-        'PORT':'47495'
+        'NAME': 'fabricio28$default',
+        'USER':'fabricio28',
+        'PASSWORD':'QazplM123',
+        'HOST':'fabricio28.mysql.pythonanywhere-services.com',
+        'PORT':'3306'
     }
 }
 
