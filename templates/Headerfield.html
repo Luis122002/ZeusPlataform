@@ -1,13 +1,16 @@
 {% load static %}
+<!-- Documento HTML encargado de la construcción del header de la plataforma-->
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- Declaraciones de formato y estilo "general de las paginas que utilizan este header"-->
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <style>
+            
             .nav-item::after {
                 content: '';
                 display: block;
@@ -17,41 +20,177 @@
                 background: linear-gradient(176deg, rgb(99,117,144,1) 0%, rgba(8,39,97,1) 47%, rgba(74,178,193,0.5326505602240896) 98%);
                 transition: 0.5s
             }
-           
+
             .nav-item:hover::after {
                 width: 100%
             }
 
-           
             .nav-link {
                 transition: 1.0s
             }
 
-            .test{
-                background: rgb(18,69,186);
-                background: linear-gradient(176deg, rgb(99,117,144,1) 40%, rgba(8,39,97,1) 80%);
+            .headerNav{
+                background-color: #001441;
             }
             .bgBody{
 
             }
+            .bodyColor{
+                background: rgb(2,0,36);
+                background: linear-gradient(90deg, rgba(166,223,235,0.9316059187346813) 0%, rgba(165,165,216,0.9428104005273985) 28%, rgba(115,135,184,0.9624182436646533) 61%, rgba(166,223,235,0.9316059187346813) 89%);
+            }
+
+            .bodyInfoPage{
+                background-color: gray;
+                font-family: Arial, Helvetica, sans-serif;
+                flex-direction: column;
+            }
+            .alert.alert-light.container.bodyInfoPage{
+                display: flex;
+                flex-direction: column;
+            }
+            .form{
+                display: flex;
+                flex-direction: column;
+            }
+            .customSwalBtn{
+                background-color: rgba(105,143,214,1.00);
+                border-left-color: rgba(214,130,47,1.00);
+                border-right-color: rgba(214,130,47,1.00);
+                border: 0;
+                border-radius: 3px;
+                box-shadow: none;
+                color: #fff;
+                cursor: pointer;
+                font-size: 17px;
+                font-weight: 500;
+                margin: 30px 5px 0px 5px;
+                padding: 10px 32px;
+            }
+            .my-custom-table{
+                background-color: #e00606;
+                border: 1px solid #00032e;
+                color: #4947d3;
+                font-family: Arial, sans-serif;
+            }
+            .table{
+                background-color: #e00606;
+                border: 1px solid #00032e;
+                color: #4947d3;
+                font-family: Arial, sans-serif;
+            }
+            .th{
+                background-color: #e00606;
+            }
+            .table{
+              background-color: #e00606;
+              border: 1px solid #00032e;
+              color: #27cf11;  /* Updated to white for better readability */
+              font-family: Arial, sans-serif;
+            }
+            .btn-dark{
+                background-color: #130c77b0;
+            }
+            .display-4 {
+                font-size: 3rem;
+                font-family: Arial, sans-serif;
+                font-weight: bold;
+                color: #04054e94;
+            }
         </style>
     </head>
-    <body class ="container-fluid">
+    <body class ="container-fluid bodyColor">
         <br/>
-        <div class="container-fluid  test rounded">
-            {% load static %} 
-            
-            <nav class="navbar navbar-expand-lg">  
-               <div class="navbar">
-                    <div class="d-flex w-200 justify-content-center">
-                        <img src="{% static 'img/icon_zeus_clean.png'%}" width="75" height="75" >&nbsp;
-                    </div>                    
+        <div class="container-fluid  headerNav rounded">
+            {% load static %}
+            <nav class="navbar navbar-expand-lg">
+                <div class="navbar text-light container-fluid">
+                    <div class="col-sm-6">
+                        <div class="d-flex w-200 justify-content-center align-items-center">
+                            <img src="{% static 'img/icon_zeus_clean.png'%}" width="75" height="75" >&nbsp;
+                            <h1>Servicios de limpieza Zeus Clean </h1>
+                        </div>
+
+                    </div>
+                    <!-- Comprueba el modo de acceso de la plataforma por el registro del usuario y su rol de administrador"-->
+                    {% if user.is_authenticated %}
+
+                    <div class="row col-sm-3 d-flex">
+                        <span class="fw-normal">Bienvenido {{user.first_name}} {{user.last_name}} </span>&nbsp;
+                        <br/><br/>
+                        <div class="align-self-end">
+
+                            {% if request.path != "/admin/" %}
+                                {% if user.is_superuser %}
+
+                                <a href="/admin" class="btn btn-success float-right">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+                                        <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                                    </svg><h7>Acceder</h7>
+                                </a>
+                                {% endif %}
+                            {% else %}
+
+                            <a href="/client" class="btn btn-success float-right">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+                                    <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                                </svg><h7>Info</h7>
+                            </a>
+                            {% endif %}
+
+                            {% if request.path == "/client/" %}
+                            <a href="/" class="btn btn-success float-right">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+                                    <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                                </svg><h7>Sitio principal</h7>
+                            </a>
+                            {% else %}
+                            <a href="/client" class="btn btn-success float-right">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+                                    <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                                </svg><h7>Cliente</h7>
+                            </a>
+
+                            {% endif %}
+
+                            <a href="/Exit" class="btn btn-warning float-right">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                </svg><h7>Salir</h7>
+                            </a>
+                        </div>
+                    </div>
+
+                    {% else %}
+
+                    <div class="ms-auto me-0">
+                            <a href="/Login" class="btn btn-secondary d-flex">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
+                            </svg><h4>Ingresar</h4>
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+
                 </div>
             </nav>
         </div>
         <br>
+        <!-- Uso de codigos JS de estilos de pagina web, peticiones y mensajes"-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
         {% if messages %}
+        <!-- Constructor de mensajes de plataforma ante acciones de usuarios"-->
             <ul class="messages">
                 {% for m in messages %}
                         {% if m.tags == 'warning' %}
@@ -74,16 +213,16 @@
                                     "text":"{{m}}",
                                     "icon":"{{m.tags}}"
                                 })
-            
-                                
+
+
                             </script>
                         {% endif %}
-                            
+
                 {% endfor %}
             </ul>
             {% endif %}
-   
+
         {% block content %}
-        {% endblock %} 
+        {% endblock %}
     </body>
 </html>

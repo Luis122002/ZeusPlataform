@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Documento de menu para el cliente-->
+<!-- Documento que se encarga de mostrar el menú principal de la plataforma web-->
 {% load static %}
 {% include 'Headerfield.html' %}
 <html>
@@ -28,31 +28,31 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col">
                 <div class="card text-white card border-dark mb-3">
-                    <img src="{% static 'img/pedido.jpg'%}" class="card-img-top" height="500px" width="auto" alt="...">
+                    <img src="{% static 'img/productofinal.jpg'%}" class="card-img-top" height="500px" width="auto" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title" >Ver mis servicios Solicitados</h5>
-                        <p class="card-text">Entra aquí y visualiza los servicios que solicitaste</p>
-                        <a href="/client/infoServices" class="btn btn-secondary btn-outline-light">Ver mis servicios</a>
+                        <h5 class="card-title" >Productos</h5>
+                        <p class="card-text">Ven y ve los servicios que ofrecemos</p>
+                        <a href="https://{{datos0.PLATAFORM_2_PRODUCTS}}" class="btn btn-secondary btn-outline-light">Ver Productos</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-white card border-dark mb-3">
-                    <img src="{% static 'img/usuario.jpg'%}" class="card-img-top" height="500px" width="auto" alt="...">
+                    <img src="{% static 'img/equipo.jpg'%}" class="card-img-top" height="500px" width="auto" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">Modificar mis datos</h5>
-                        <p class="card-text">Cambiaste tus datos, entra aquí para modificarlos</p>
-                        <a href="/ModRegister" class="btn btn-primary btn-outline-light">Modificar mis datos</a>
+                        <h5 class="card-title">Solicitud de trabajo</h5>
+                        <p class="card-text">Únete a nosotros y sé nuestro colaborador</p>
+                        <a href="https://{{datos0.PLATAFORM_2_RESOURCE}}" class="btn btn-primary btn-outline-light">Solicitud de trabajo</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-white card border-dark mb-3">
-                    <img src="{% static 'img/servicio.jpg'%}" class="card-img-top" height="500px" width="auto" alt="..." >
+                    <img src="{% static 'img/registrate.jpg'%}" class="card-img-top" height="500px" width="auto" alt="..." >
                     <div class="card-body">
-                        <h5 class="card-title">Adquiere nuestros servicios</h5>
-                        <p class="card-text">Adquiere nuestros servicios, tenemos una gran cantidad de servicios para ti solicítalos en cualquier momento</p>
-                        <a href="/client/Acquire_Service" class="btn btn-primary btn-outline-light">Adquirir servicio</a>
+                        <h5 class="card-title">Registrate</h5>
+                        <p class="card-text">Registrate para solicitar nuestros servicios</p>
+                        <a href="/Register" class="btn btn-primary btn-outline-light">Registrate aquì</a>
                     </div>
                 </div>
             </div>

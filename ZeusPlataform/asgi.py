@@ -1,11 +1,4 @@
-"""
-ASGI config for ZeusPlataform project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
-"""
+#Documento de acceso de servidor de forma asincroniza y libre de procesos lineales o con espera para la comunicación y conectvidad de la plataforma
 
 import os
 

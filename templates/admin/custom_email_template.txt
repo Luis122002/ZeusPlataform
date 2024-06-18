@@ -1,0 +1,11 @@
+Hola,
+
+Has solicitado restablecer la contraseña de tu cuenta en nuestro sitio web. 
+Haz clic en el siguiente enlace para restablecer tu contraseña:
+
+{{ password_reset_url }}
+
+Si no solicitaste este cambio, puedes ignorar este correo electrónico.
+
+Saludos,
+El equipo de nuestro sitio web

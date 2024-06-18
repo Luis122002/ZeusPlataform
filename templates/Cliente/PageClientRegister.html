@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<!-- Documento para ingresar a la plataforma por medio de este formulario de sesión"-->
+<!-- Documento para registrar un nuevo usuario en la platafora"-->
 {% load static %}
 {% include 'Headerfield.html' %}
 <html>
-    <Head>
+    <head>
         <meta charset="uft-8"/>
         <title>Ingreso</title>
         <link rel="icon" type="image/png" href="{% static 'img/icon_zeus_clean.png' %}"/>
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <style>
-            .form-control{
-                font-family: Arial, Helvetica, sans-serif;
-            }
-            .card-body{
-                background-color: #0D2137;
-            }
             .btn{
               background-color: #38afd9;
             }
+            .card-body {
+              text-align: center;
+              background-color: #0D2137;
+            }
+            .card-img-top {
+
+              margin-right: 50px;
+            }
         </style>
-    </Head>
-    <body class='container mt-5'>
+    </head>
+    <body>
         <section class="vh-100 gradient-custom">
             <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -29,28 +31,18 @@
                             <div class="card-body p-5 text-center">
                                 <div class="mb-md-5 mt-md-4 pb-5">
 
-                                    {% if request.path == "/ModRegister/" %}
-                                    <h2 class="fw-bold mb-2 text-uppercase">Actualizar registro</h2>
-                                    {% else %}
-                                    <h2 class="fw-bold mb-2 text-uppercase">Inicio sesión</h2>
-                                    {% endif %}
-
-                                    <p class="text-white-50 mb-5">¡Ingrese su RUT y contraseña!</p>
+                                    <h2 class="fw-bold mb-2 text-uppercase">Registrarse</h2>
+                                    <p class="text-white-50 mb-5">¡Ingrese sus datos!</p>
 
                                     <form action = "" method = "post">
                                         {% csrf_token %}
 
                                         {{ form.as_div }}
                                         </br>
-                                        <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="../accounts/password/reset/">¿Olvido su contraseña?</a></p>
+
                                         <input type="submit" class="btn btn-outline-light btn-lg px-5" value="Ingresar">
                                         <a href="/" class="btn btn-outline-light btn-lg px-5">Cancelar</a>
                                     </form>
-
-                                    <div>
-                                        <p class="mb-0">¿No tienes una cuenta creada? <a href="/Register" class="text-white-50 fw-bold">Crear cuenta</a>
-                                        </p>
-                                    </div>
                                 </div>
                             </div>
                         </div>

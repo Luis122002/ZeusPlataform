@@ -1,191 +1,372 @@
 <!DOCTYPE html>
 {% load static %}
+{% csrf_token %}
 {% include 'Headerfield.html' %}
 <html>
     <Head>
         <meta charset="uft-8"/>
-        <title>paginaAdmin</title>
+        <title>página Admin</title>
         <link rel="icon" type="image/png" href="{% static 'img/icon_zeus_clean.png' %}"/>
+        <style>
+            /* Estilos para los botones Sandbox y Live */
+            .paypal-btn {
+                padding: 10px 20px;
+                margin: 5px;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
+        
+            /* Estilos adicionales para el botón Sandbox */
+            #sandboxBtn {
+                background-color: #007bff; /* Color azul */
+            }
+        
+            /* Estilos adicionales para el botón Live */
+            #liveBtn {
+                background-color: #28a745; /* Color verde */
+            }
+        </style>
     </Head>
     <body class='container mt-5'>
-        <div class="alert alert-info dispaly-1 text-center">Sitio de administrador</div>
+        <div class="text-center mt-3 mb-3">
+            <h3 class="display-4">¡Bienvenido! Al panel del administrador</h3>
+        </div>
         <br/><br/>
 
-        <button onclick="(showUsers())">Usuarios</button>
-        <button onclick="(showService())">servicios</button>
-        <button onclick="(showCategory())">Categorias de servicios</button>
-        <button onclick="(showAcquireService())">Solicitud de servicios</button>
 
-        <div name='panelServicios'>
+        <div class="container-fluid">
+            <div class="input-group justify-content-center">
+                <div class="form-outline" data-mdb-input-init>
+                    <input type="search" id="searchInput" placeholder="Ingrese la palabra clave para su busqueda" class="form-control"/>
+                </div>
+                <button type="button" id="searchButton" onclick="PresevWord()"class="btn btn-dark btn-outline-light" data-mdb-ripple-init>
+                    <i class="fas fa-search">Buscar</i>
+                </button>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row container-fluid">
+            <button class="btn btn-dark btn-outline-light col my-4 mx-3 btn-lg" onclick="(showUsers())">
+                <span class="fs-5">Usuarios</span>
+            </button>
+            <button class="btn btn-dark btn-outline-light col my-4 mx-3 btn-lg" onclick="(showService())">
+                <span class="fs-5">Servicios</span>
+            </button>
+            <button class="btn btn-dark btn-outline-light col my-4 mx-3 btn-lg" onclick="(showCategory())">
+                <span class="fs-5">Categorías de servicios</span>
+            </button>
+            <button class="btn btn-dark btn-outline-light col my-4 mx-3 btn-lg" onclick="(showAcquireService())">
+                <span class="fs-5">Solicitud de servicios</span>
+            </button>
+            <button class="btn btn-dark btn-outline-light col my-4 mx-3 btn-lg" onclick="(showTransact())">
+                <span class="fs-5">Transacciones</span>
+            </button>
+            <button class="btn btn-dark btn-outline-light col my-4 mx-3 btn-lg" onclick="(showProject())">
+                <span class="fs-5">Proyecto</span>
+            </button>
+        </div>
+
+        <div name='panel_1'>
             <br/>
-            {% if datos2 %}
-            <table class="table table-striped table-inverse table-responsive">
-                <thead class="thead-inverse">
-                    <tr>
-                        <th>Nombre de servicio</th>
-                        <th>Descripcion de servicio</th>
-                        <th>Precio estimado</th>
-                        <th>Categoria</th>
-                        <th>Modificar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for x in datos2 %}
-                         <tr>
-                            <td>{{x.Nombre_servicio}}</td>
-                            <td>{{x.Descripcion_servicio}}</td>
-                            <td>{{x.Precio_estimado}}</td>
+            <div class="overflow-x-auto mt-3 pb-5" name='tablaData_1'style="display: none;">
+                <table class="table table-striped table-inverse table-responsive" id = 'tabla_1'>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Nombre de servicio</th>
+                            <th>Descripcion de servicio</th>
+                            <th>Precio estimado</th>
+                            <th>Tipo de limpieza</th>
+                            <th>Categoria</th>
+                            <th>Estado</th>
+                            <th>Modificar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if datos2 %}
+                        {% for x in datos2 %}
+                            <tr>
+                                <td>{{x.Nombre_servicio}}</td>
+                                <td>{{x.Descripcion_servicio}}</td>
+                                <td>CLP {{x.Precio_estimado}}</td>
+                                <td>{{x.Tipo_limpieza}}</td>
+                                <td>
+                                    {% if datos3 %}
+                                        {% for y in datos3 %}
+                                            {% if y.Servicios == x %}
+                                            - {{y.Categoria}} <br/>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                Ninguna categoria asignada
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if x.Disponibilidad == "Disponible" %}
+                                        <button type="button" class="btn btn-success btn-lg container" onclick="OptionStade('{{ x.id }}')">{{ x.Disponibilidad }}</button>
+                                    {% elif x.Disponibilidad == "Desabilitado" %}
+                                        <button type="button" class="btn btn-warning btn-lg container" onclick="OptionStade('{{ x.id }}')">{{ x.Disponibilidad }}</button>
+                                    {% endif %}
+                                </td>
+                                <td><button type="button" class="btn btn-info btn-lg container" onclick="OptionsServices('{{ x.id }}')">Ajustes</button/></td>
+                                    <td><button type="button" class="btn btn-danger btn-lg container" onclick="deletData(1,'{{ x.id }}')">Borrar</button/></td>
+                            </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-info" name="NoData_1" style="display: none;">No hay servicios que mostrar</div>
+            <a href="/admin/addServices" class="btn btn-success btn-lg">Agregar servicios</a>
+        </div>
+
+        <div name='panel_2' >
+            <br/>
+            <div class="overflow-x-auto mt-3 pb-5" name='tablaData_2' style="display: none;">
+                <table class="table table-striped table-inverse table-responsive" id = 'tabla_2'>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Nombre de categoria</th>
+                            <th>Descripcion de categoria</th>
+                            <th>Modificar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if datos1 %}
+                        {% for x in datos1 %}
+                            <tr>
+                                <td>{{x.Nombre_categoria}}</td>
+                                <td>{{x.Descripcion_categoria}}</td>
+                                <td><a href="/admin/editCategory/{{x.id}}" class="btn btn-success btn-lg">Ajustes<i class="bi bi-pencil"/></td>
+                                <td><button type="button" class="btn btn-danger btn-lg container" onclick="deletData(2,'{{ x.id }}')">Borrar</button/></td>
+                            </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-info" name="NoData_2" style="display: none;">No hay categorias que mostrar</div>
+
+            <a href="/admin/AddCategory" class="btn btn-success btn-lg">Agregar categoria</a>
+
+        </div>
+
+        <div name='panel_3'>
+            <br/>
+            <div class="overflow-x-auto mt-3 pb-5" name='tablaData_3' style="display: none;">
+                <table class="table table-striped table-inverse table-responsive" id = 'tabla_3'>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Nombre de Usuario</th>
+                            <th>Rut</th>
+                            <th>Permiso administrador</th>
+                            <th>Permiso trabajador</th>
+                            <th>Correo</th>
+                            <th>Contacto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if datos0 %}
+                        {% for x in datos0 %}
+                            <tr>
+                                <td>{{x.first_name}}  {{x.last_name}}</td>
+                                <td>{{x.username}}</td>
+                                <td>{{x.is_superuser}}</td>
+                                <td>{{x.is_trabajador}}</td>
+                                <td>{{x.email}}</td>
+                                <td>{{x.telefono}}</td>
+                            </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-info" name="NoData_3" style="display: none;">No hay categorias que mostrar</div>
+        </div>
+
+        <div name='panel_4'>
+            <br/>
+            <div class="overflow-x-auto mt-3 pb-5" name='tablaData_4' style="display: none;">
+                <table class="table table-striped table-inverse table-responsive" id = 'tabla_4'>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Nombre de cliente</th>
+                            <th>Direccion</th>
+                            <th>Telefono de contacto</th>
+                            <th>Fecha solicitada</th>
+                            <th>Fecha generada</th>
+                            <th>Tipo de servicio</th>
+                            <th>Estado</th>
+                            <th>Contacto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if datos4 %}
+                        {% for x in datos4 %}
+                            <tr>
+                                <td>{{x.cliente}}</td>
+                                <td>{{x.Direccion_limpieza}}</td>
+                                <td>{{x.telefono_contacto}}</td>
+                                <td>{{x.Fecha_servicio}}</td>
+                                <td>{{x.Fecha_data}}</td>
+                                <td>{{x.Servicios}}</td>
+                                <td>
+                                    {% if x.Estado == "Aceptado" %}
+                                    <button class="btn btn-success" onclick="StadeSolicitude('{{ x.id }}','{{ x.cliente }}','{{ x.Servicios }}')">{{x.Estado}}</button>
+                                    {% elif x.Estado == "Rechazado" %}
+                                    <button class="btn btn-danger" onclick="StadeSolicitude('{{ x.id }}','{{ x.cliente }}','{{ x.Servicios }}')">{{x.Estado}}</button>
+                                    {% elif x.Estado == "Nuevo" %}
+                                    <button class="btn btn-primary" onclick="StadeSolicitude('{{ x.id }}','{{ x.cliente }}','{{ x.Servicios }}')">{{x.Estado}}</button>
+                                    {% elif x.Estado == "Pendiente" %}
+                                    <button class="btn btn-warning" onclick="StadeSolicitude('{{ x.id }}','{{ x.cliente }}','{{ x.Servicios }}')">{{x.Estado}}</button>
+                                    {% elif x.Estado == "Pagado" %}
+                                    <button class="btn btn-info" onclick="FinishStade({{x.id}})">{{x.Estado}}</button>
+                                    {% elif x.Estado == "Cancelado" %}
+                                    <button class="btn btn-secondary">{{x.Estado}}</button>
+                                    {% elif x.Estado == "Finalizado" %}
+                                    <button class="btn btn-light">{{x.Estado}}</button>
+                                    {% elif x.Estado == "Reembolsado" %}
+                                    <button class="btn btn-dark">{{x.Estado}}</button>
+                                    {% endif %}
+                                </td>
+                                <td><button class="btn btn-info btn-sm" onclick="ContactClient('{{ x.id }}')"><svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                                    </svg></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-info" name="NoData_4" style="display: none;">No hay peticiones de servicios disponibles</div>
+        </div>
+
+        <div name='panel_5'>
+            <br/>
+            <div class="overflow-x-auto mt-3 pb-5" name='tablaData_5'style="display: none;">
+                <table class="table table-striped table-inverse table-responsive" id='tabla_5'>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Codigo de transacción</th>
+                            <th>Cliente </th>
+                            <th>Detalle de solicitud </th>
+                            <th>Fecha de transacción</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if datos5 %}
+                        {% for x in datos5 %}
+                        <tr>
+                            <td>{{ x.codigo }}</td>
+                            <td>{{ x.cliente }}</td>
                             <td>
-                                {% if datos3 %}
-                                    {% for y in datos3 %}
-                                        {% if y.Servicios == x %}
-                                        -{{y.Categoria}}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                               Ninguna categoria asignada
-                                {% endif %}
-                            -</td>
-                            <td><a href="admin/editServicio/{{dato.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
-                            <td><a href="admin/deletServicio/{{dato.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
+                                {% for servicio in x.servicios.all %}
+                                {{ servicio.Servicios }} | {{ servicio.Direccion_limpieza }} | {{ servicio.Fecha_servicio }}<br>
+                                {% endfor %}
+                            </td>
+                            <td>{{ x.fecha_realizada }}</td>
+                            <td><button type="button" class="btn btn-info btn-lg">{{ x.accion }}</button></td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>     
-            {% else %}
-            <div class="alert alert-info">No hay servicios que mostrar</div>
-            {% endif %}
-            <a href="/admin/addServices">Agregar servicios</a>
-            <a href="/admin/linkedService">Agregar categorias</a>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-info" name="NoData_5" style="display: none;">No hay transacciones que mostrar</div>
         </div>
 
-        <div name='panelCategoria' >
+        <div name='panel_6' style="display: none;">
             <br/>
-            {% if datos1 %}
-            <table class="table table-striped table-inverse table-responsive">
-                <thead class="thead-inverse">
-                    <tr>
-                        <th>Nombre de categoria</th>
-                        <th>Descripcion de categoria</th>
-                        <th>Modificar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for x in datos1 %}
-                         <tr>
-                            <td>{{x.Nombre_categoria}}</td>
-                            <td>{{x.Descripcion_categoria}}</td>
-                            <td><a href="admin/editCategoria/{{x.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
-                            <td><a href="admin/deletCategoria/{{x.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>     
-            {% else %}
-            <div class="alert alert-info">No hay categorias que mostrar</div>
-            {% endif %}
-            <a href="/admin/AddCategory">Agregar categoria</a>
-            
-        </div>
+            <div class="overflow-x-auto mt-3 pb-5">
+                <div class="container-fluid bg-light p-3" id='tabla_6' name="tablaData_6">
+                    <br/>
+                    {% if datos7 %}
+                        {% for key, value in datos7.items %}
+                            {% if key == 'paypal_client_id' %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(3)">{{ key }}</button>
+                                <input id="setting_3" type="text" class="form-control" value="{{ value }}" disabled><br/>
+                            {% elif key == 'paypal_client_secret' %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(4)">{{ key }}</button>
+                                <input id="setting_4" type="text" class="form-control" value="{{ value }}" disabled><br/>
+                            {% elif key == 'email_host_user' %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(5)">{{ key }}</button>
+                                <input id="setting_5" type="text" class="form-control" value="{{ value }}" disabled><br/>
+                            {% elif key == 'email_host_password' %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(6)">{{ key }}</button>
+                                <input id="setting_6" type="text" class="form-control" value="{{ value }}" disabled><br/>
+                            {% elif key == 'PAYPAL_PROJECT_MODE' %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(7)">{{ key }}</button>
+                                <input id="setting_7" type="text" class="form-control" value="{{ value }}" disabled><br/>
+                            {% elif key == 'PLATAFORM_2_RESOURCE' %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(8)">{{ key }}</button>
+                                <input id="setting_8" type="text" class="form-control" value="{{ value }}" disabled><br/>
+                            {% elif key == 'PLATAFORM_2_PRODUCTS' %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(9)">{{ key }}</button>
+                                <input id="setting_9" type="text" class="form-control" value="{{ value }}" disabled><br/>
+                            {% else %}
+                                <button class="btn btn-outline-secondary" type="button" onclick="editProject(0)">{{ key }}</button>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if datos6 %}
+                        {% for x in datos6 %}
+                        <button class="btn btn-outline-secondary" type="button" onclick="editProject(1)">Nombre del servidor</button>
+                        <input id="setting_1" type="text" class="form-control" value="{{ x.name }}" disabled> <br/>
+                        <button class="btn btn-outline-secondary" type="button" onclick="editProject(2)">Dominio del servidor</button>
+                        <input id="setting_2" type="text" class="form-control" value="{{ x.domain }}" disabled> <br/>
 
-        <div name='panelUsuarios' >
-            <br/>
-            {% if datos0 %}
-            <table class="table table-striped table-inverse table-responsive">
-                <thead class="thead-inverse">
-                    <tr>
-                        <th>Nombre de Usuario</th>
-                        <th>Rut</th>
-                        <th>Permiso administrador</th>
-                        <th>Permiso trabajador</th>
-                        <th>Correo</th>
-                        <th>Clave</th>
-                        <th>Modificar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for x in datos0 %}
-                         <tr>
-                            <td>{{x.first_name}}  {{x.last_name}}</td>
-                            <td>{{x.username}}</td>
-                            <td>{{x.is_superuser}}</td>
-                            <td>{{x.is_trabajador}}</td>
-                            <td>{{x.email}}</td>
-                            <td>{{x.password}}</td>
-                            <td><a href="admin/editCategoria/{{x.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
-                            <td><a href="admin/deletCategoria/{{x.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>     
-            {% else %}
-            <div class="alert alert-info">No hay categorias que mostrar</div>
-            {% endif %}
-            <a href="/admin/AddCategory">Agregar categoria</a>
-            
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+                <br/>  
+            </div>
         </div>
-
-        <div name='panelSolicitud' >
-            <br/>
-            {% if datos4 %}
-            <table class="table table-striped table-inverse table-responsive">
-                <thead class="thead-inverse">
-                    <tr>
-                        <th>Nombre de cliente</th>
-                        <th>Direccion</th>
-                        <th>Telefono de contacto</th>
-                        <th>Fecha solicitada</th>
-                        <th>Tipo de servicio</th>
-                        <th>Modificar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for x in datos4 %}
-                         <tr>
-                            <td>{{x.Nombre_cliente}}</td>
-                            <td>{{x.Direccion_limpieza}}</td>
-                            <td>{{x.telefono_contacto}}</td>
-                            <td>{{x.Fecha_servicio}}</td>
-                            <td>{{x.Servicios}}</td>
-                            <td><a href="admin/editCategoria/{{x.id}}" class="btn btn-success btn-sm"><i class="bi bi-pencil"/></td>
-                            <td><a href="admin/deletCategoria/{{x.id}}" class="btn btn-danger btn-sm"><i class="bi bi-pencil"/></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>     
-            {% else %}
-            <div class="alert alert-info">No hay categorias que mostrar</div>
-            {% endif %}
-            <a href="/admin/AddCategory">Agregar categoria</a>
-            
-        </div>
-        <br/><br/>
-        <a href="../Exit" class "btn btn-info">Salir</a>
         
+
+        <br/><br/>
+
+        <a href="/" class="btn btn-success float-right">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+                <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+            </svg><h7>Inicio</h7>
+        </a>
 
     </body>
     <script>
-
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var SearchWord = ""
+        var tableFind =""
         let showServicios = false
         let showCategoria = false
         let showUsuarios = false
         let showSolicitud = false
-        var divServicios = document.querySelector("[name='panelServicios']")
-        var divCategoria = document.querySelector("[name='panelCategoria']")
-        var divUsuarios = document.querySelector("[name='panelUsuarios']")
-        var divSolicitud = document.querySelector("[name='panelSolicitud']")
+        let showTransaction = false
+        let showProyecto = false
+        var divServicios = document.querySelector("[name='panel_1']")
+        var divCategoria = document.querySelector("[name='panel_2']")
+        var divUsuarios = document.querySelector("[name='panel_3']")
+        var divSolicitud = document.querySelector("[name='panel_4']")
+        var divTransact = document.querySelector("[name='panel_5']")
+        var divProject = document.querySelector("[name='panel_6']")
+
+        let idreff = 0
 
         let showService = () =>
         {
-            console.log("adios")
             showServicios = !showServicios
             if(showServicios)
             {
                 divServicios.style.display = "block"
+                actualizarTabla();
+                tableFind = "#tabla_1"
             }
             else
             {
@@ -194,9 +375,13 @@
             showCategoria = false
             showUsuarios = false
             showSolicitud = false
+            showTransaction = false
+            showProyecto = false
             divCategoria.style.display = "none";
             divUsuarios.style.display = "none";
             divSolicitud.style.display = "none";
+            divTransact.style.display = "none";
+            divProject.style.display = "none";
         }
 
         let showCategory = () =>
@@ -205,6 +390,8 @@
             if(showCategoria)
             {
                 divCategoria.style.display = "block"
+                actualizarTabla();
+                tableFind = "#tabla_2"
             }
             else
             {
@@ -213,9 +400,13 @@
             showSolicitud = false
             showServicios = false
             showUsuarios = false
+            showTransaction = false
+            showProyecto = false
             divServicios.style.display = "none";
             divUsuarios.style.display = "none";
             divSolicitud.style.display = "none";
+            divTransact.style.display = "none";
+            divProject.style.display = "none";
         }
         let showUsers = () =>
         {
@@ -223,6 +414,8 @@
             if(showUsuarios)
             {
                 divUsuarios.style.display = "block";
+                actualizarTabla();
+                tableFind = "#tabla_3"
             }
             else
             {
@@ -231,18 +424,24 @@
             showSolicitud = false
             showServicios = false
             showCategoria = false
+            showTransaction = false
+            showProyecto = false
             divServicios.style.display = "none";
             divCategoria.style.display = "none";
             divSolicitud.style.display = "none";
+            divTransact.style.display = "none";
+            divProject.style.display = "none";
         }
 
         let showAcquireService = () =>
         {
-            console.log("adios")
+
             showSolicitud = !showSolicitud
             if(showSolicitud)
             {
                 divSolicitud.style.display = "block"
+                actualizarTabla();
+                tableFind = "#tabla_4"
             }
             else
             {
@@ -251,21 +450,639 @@
             showCategoria = false
             showUsuarios = false
             showServicios = false
+            showTransaction = false
+            showProyecto = false
             divCategoria.style.display = "none";
             divUsuarios.style.display = "none";
             divServicios.style.display = "none";
+            divTransact.style.display = "none";
+            divProject.style.display = "none";
         }
+
+        let showTransact = () =>
+        {
+            showTransaction = !showTransaction
+            if(showTransaction)
+            {
+                divTransact.style.display = "block"
+                actualizarTabla();
+                tableFind = "#tabla_5"
+            }
+            else
+            {
+                divTransact.style.display = "none";
+            }
+            showSolicitud = false
+            showCategoria = false
+            showUsuarios = false
+            showServicios = false
+            showProyecto = false
+            divCategoria.style.display = "none";
+            divUsuarios.style.display = "none";
+            divServicios.style.display = "none";
+            divSolicitud.style.display = "none";
+            divProject.style.display = "none";
+        }
+
+        let showProject = () =>
+        {
+            showProyecto = !showProyecto
+            if(showProyecto)
+            {
+                divProject.style.display = "block"
+                actualizarTabla();
+                tableFind = "#tabla_6"
+            }
+            else
+            {
+                divProject.style.display = "none";
+            }
+            showCategoria = false
+            showUsuarios = false
+            showSolicitud = false
+            showTransaction = false
+            showServicios = false
+            divCategoria.style.display = "none";
+            divUsuarios.style.display = "none";
+            divSolicitud.style.display = "none";
+            divTransact.style.display = "none";
+            divServicios.style.display = "none";
+        }
+
 
 
         let started = () =>
         {
-            console.log("Biembenido admin")
             divServicios.style.display = "none";
             divCategoria.style.display = "none";
             divSolicitud.style.display = "none";
             divUsuarios.style.display = "none";
+            divTransact.style.display = "none";
         }
+
+        function PresevWord()
+        {
+            SearchWord = $('#searchInput').val().toLowerCase();
+            BuscarResultado()
+        }
+
+        function BuscarResultado() {
+
+            if(tableFind == "")return;
+
+            $(tableFind + ' tbody tr').each(function() {
+                let currentRow = $(this);
+
+                currentRow.hide();
+
+                currentRow.find('td').each(function() {
+                    if ($(this).text().toLowerCase().indexOf(SearchWord) !== -1) {
+                        currentRow.show();
+                        return false; // Sale del bucle si encuentra coincidencias
+                    }
+                });
+            });
+        }
+
+
         started()
+
+        function actualizarTabla() {
+            // Hacer una solicitud AJAX para obtener los datos más recientes
+            $.ajax({
+                url: window.location.href,
+                type: 'GET',
+                dataType: 'html',  // Esperamos HTML como respuesta
+                success: function(response) {
+                    // Reemplaza el contenido de la tabla con la respuesta obtenida
+                    $('#tabla_1').html($(response).find('#tabla_1').html());
+                    actualizarTablaIndividual('#tabla_1',response, "1");
+                    $('#tabla_2').html($(response).find('#tabla_2').html());
+                    actualizarTablaIndividual('#tabla_2',response, "2");
+                    $('#tabla_3').html($(response).find('#tabla_3').html());
+                    actualizarTablaIndividual('#tabla_3',response, "3");
+                    $('#tabla_4').html($(response).find('#tabla_4').html());
+                    actualizarTablaIndividual('#tabla_4',response, "4");
+                    $('#tabla_5').html($(response).find('#tabla_5').html());
+                    actualizarTablaIndividual('#tabla_5',response, "5");
+                },
+                error: function(error) {
+                    console.error('Error al obtener datos:', error);
+                }
+            });
+        }
+        function actualizarTablaIndividual(tablaId, response, numberdat) {
+            var contenidoTabla = $(response).find(tablaId + ' tbody').html();
+            let datainfo = "tablaData_" + numberdat;
+            let dataNull = "NoData_" + numberdat;
+            let elementos = document.querySelector(`[name='${datainfo}']`);
+            let elementos2 = document.querySelector(`[name='${dataNull}']`);
+            var tablaElemento = document.querySelector(tablaId);
+            if (contenidoTabla.trim() == "") {
+                elementos.style.display = 'none';
+                elementos2.style.display = 'block';
+            } else {
+                elementos.style.display = 'block';
+                elementos2.style.display = 'none';
+            }
+            BuscarResultado()
+        }
+
+        $(document).ready(function() {
+            setInterval(actualizarTabla, 2500);
+        });
+
+
+
+        function OptionStade(id)
+        {
+            idreff = id
+            Swal.fire({
+            "title":"Opciones de Estado",
+            "text":"Defina el estado del servicio",
+            "showConfirmButton": true,
+            "showCancelButton": true,
+            "showDenyButton": true,
+            "cancelButtonText": "Cancelar",
+            "confirmButtonText": "Habiltar",
+            "denyButtonText": 'Desabilirar',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    ActionStadeServ(id, 1)
+                } else if (result.isDenied) {
+                    ActionStadeServ(id, 0)
+                }
+              });
+        }
+
+
+
+        function OptionsServices(id)
+        {
+            idreff = id
+            Swal.fire({
+            "title":"Opciones de servicio",
+            "showConfirmButton": false,
+            "showCancelButton": true,
+            "cancelButtonText": "Cancelar",
+            "html": "Escoge una de las siguientes opciones con el servicio escogido" +
+            "<br>" +
+            '<button type="button" role="button" tabindex="0" class="SwalBtn1 customSwalBtn">' + 'Categoria' + '</button>' +
+            '<button type="button" role="button" tabindex="0" class="SwalBtn2 customSwalBtn">' + 'General' + '</button>',
+            })
+        }
+        $(document).on('click', '.SwalBtn1', function() {
+            var dropdownOptions = '<option value="">Ninguno</option>';
+            var idcat = 0
+            {% for opcion in datos1 %}
+            dropdownOptions += '<option value="{{ opcion.id }}">{{ opcion.Nombre_categoria }}</option>';
+            {% endfor %}
+
+            console.log(idreff)
+            Swal.fire({
+                "title": "Opciones de servicio",
+                "showConfirmButton": true,
+                "showCancelButton": true,
+                "cancelButtonText": "Cancelar",
+                "html": "Escoge una de las siguientes opciones con el servicio escogido" +
+                    "<br>" +
+                    '<select id="categoriaDropdown">' + dropdownOptions + '</select>' + "<br>",
+                "showDenyButton": true,
+                "showCancelButton": true,
+                "cancelButtonText": "Cancelar",
+                "confirmButtonText": "Añadir",
+                "denyButtonText": `Eliminar`
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    ActionCatServ(idreff, idcat, "add")
+                } else if (result.isDenied) {
+                    ActionCatServ(idreff, idcat, "delete")
+                }
+              });
+            var dropdown = document.getElementById('categoriaDropdown');
+            dropdown.addEventListener('change', function() {
+                var valorSeleccionado = dropdown.value;
+                idcat = valorSeleccionado;
+            });
+
+        });
+
+        $(document).on('click', '.SwalBtn2', function() {
+            window.location.href = `/admin/editServices/${idreff}`;
+        });
+
+
+        function ActionStadeServ(idsev, Stade)
+        {
+            event.preventDefault();
+            $.ajax({
+                url: `/admin/SetStadeServ/${idsev}`,
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    Estado: Stade
+                },
+                success: function(response) {
+                    console.log(response)
+                    Swal.fire({
+                        "title": response.titulo,
+                        "icon":response.icono
+                        })
+                },
+                error: function(error) {
+                    Swal.fire({
+                        "title":"Ocurrio un problema",
+                        "text": "La conexión con el servidor o la base de datos se interrumpio",
+                        "icon":"warning"
+                        })
+                }
+            });
+        }
+
+
+        function ActionCatServ(idsev, idcat, stade)
+        {
+
+            if(idcat == 0)
+            {
+                Swal.fire({
+                    "title":"Ocurrio un problema",
+                    "text": "Tienes que escoger una categoria para realizar la operación",
+                    "icon":"warning"
+                    })
+                return;
+            }
+
+            event.preventDefault();
+            $.ajax({
+                url: `/admin/SetCatServ/${idreff}/${idcat}/${stade}`,
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: csrfToken
+                },
+                success: function(response) {
+                    Swal.fire({
+                        "title": response.titulo,
+                        "text": response.mensaje,
+                        "icon":response.icono
+                        })
+                },
+                error: function(error) {
+                    Swal.fire({
+                        "title":"Ocurrio un problema",
+                        "text": "La conexión con el servidor o la base de datos se interrumpio",
+                        "icon":"warning"
+                        })
+                }
+            });
+
+        }
+
+        function deletData(val, id)
+        {
+            if(val == 1)
+            {
+                Swal.fire({
+                    "title": "¿Seguro que quieres eliminar este servicio?",
+                    "text": "Al hacerlo, se borra todas las solicitudes de los serviciós",
+                    icon: "question",
+                    "showDenyButton": true,
+                    "showCancelButton": false,
+                    "denyButtonText": `Si`,
+                    "confirmButtonText": "No",
+                  }).then((result) => {
+                    if (result.isDenied) {
+                        window.location.href = `/admin/deletServices/${id}`;
+                    }
+                  });
+            }
+            if(val == 2)
+            {
+                Swal.fire({
+                    "title": "¿Seguro que quieres eliminar esta categoría?",
+                    icon: "question",
+                    "showDenyButton": true,
+                    "showCancelButton": false,
+                    "confirmButtonText": "No",
+                    "denyButtonText": `Si`
+                  }).then((result) => {
+                    if (result.isDenied) {
+                        window.location.href = `/admin/deletCategory/${id}`;
+                    }
+                  });
+            }
+            else
+            {
+
+            }
+
+        }
+
+
+        function StadeSolicitude(id, user, service)
+        {
+            Swal.fire({
+            "title":"Opciones de envío",
+            "text": "Para la solicitud del " + service +  " a " + user + ", ingresa una de las 3 opciónes",
+            "icon":"warning",
+            "showDenyButton": true,
+            "showCancelButton": true,
+            "cancelButtonText": "Pendiente",
+            "confirmButtonText": "Aceptar",
+            "denyButtonText": `Rechazar`,
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    StadeSolicitudeVal(id, service, user, 1);
+                } else if (result.isDenied) {
+                    StadeSolicitudeVal(id, service, user, 2);
+                }
+                else
+                {
+                    StadeSolicitudeVal(id, service, user, 3);
+                }
+              });
+        }
+
+        let StadeSolicitudeVal = (id, service, user, stade) =>
+        {
+            if(stade == 1)
+            {
+                Swal.fire({
+                "title":"Servicio aceptado",
+                "icon":"success"
+                })
+                StadeSolicitudeRequest(id, "Aceptado", service, user)
+            }
+            if(stade == 2)
+            {
+                Swal.fire({
+                    "title":"Servicio rechazado",
+                    "icon":"error"
+                    })
+                StadeSolicitudeRequest(id, "Rechazado", service, user)
+            }
+            if(stade == 3)
+            {
+                Swal.fire({
+                    "title":"Servicio pendiente",
+                    "icon":"info"
+                    })
+                StadeSolicitudeRequest(id, "Pendiente", service, user)
+            }
+        }
+
+        function ContactClient(id)
+        {
+
+            console.log("id: " + id);
+            Swal.fire({
+                title: "Enviar mensaje al cliente",
+                html:'<label for="inputAsunto" class="form-control">Asunto: </label><input id="inputAsunto" name="inputAsunto" class="form-control"></input><br/><label for="inputMensaje" class="form-control">Mensaje: </label><textarea id="inputMensaje" name="inputMensaje"class="form-control" ></textarea>',
+                inputAttributes: {
+                  autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Enviar",
+                cancelButtonText:"Cancelar"
+              }).then((result) => {
+                if (result.isConfirmed)
+                {
+                    SendMessenge(id, asuntData.value ,messegeData.value)
+                }
+              });
+
+              var messegeData = document.getElementById('inputMensaje');
+              var asuntData = document.getElementById('inputAsunto');
+        }
+
+        function SendMessenge(id, asunto, message) {
+            event.preventDefault();
+            console.log(message);
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            $.ajax({
+                url: `/admin/EnvioMensaje/${id}/`,
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    asunto: asunto,
+                    mensaje: message
+                },
+                success: function(response) {
+                    console.log('Mensaje enviado:', response);
+                },
+                error: function(error) {
+                    console.error('Error al enviar mensaje:', error);
+                }
+            });
+        }
+
+        function StadeSolicitudeRequest(id, Estado, cliente, servicio) {
+            event.preventDefault();
+
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            $.ajax({
+                url: `/admin/actualizar_estado_solicitud/${id}/${Estado}/`,
+                type: 'POST',
+                data: {
+                    cliente: cliente,
+                    servicio: servicio,
+                    csrfmiddlewaretoken: csrfToken
+                },
+                success: function(response) {
+                    console.log('Actualización exitosa:', response);
+                },
+                error: function(error) {
+                    console.error('Error al actualizar:', error);
+                }
+            });
+        }
+
+        function FinishStade(id) {
+            console.log(id)
+            Swal.fire({
+                title: '¿Está seguro de finalizar el servicio?',
+                text: 'Si su servicio ha sido entregado y completado, marque la casilla para finalizarlo. Si no desea finalizar el servicio, presione el botón Atrás.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Finalizar servicio',
+                cancelButtonText: 'Atrás'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // El usuario ha confirmado finalizar el servicio
+                    // Realizar una solicitud AJAX para actualizar el estado del servicio a "Finalizado"
+                    $.ajax({
+                        url: '/client/AlterService/',
+                        method: 'POST',
+                        data: { ID_Estado: id, Estado: 'Finalizado', csrfmiddlewaretoken: csrfToken },
+                        success: function(response) {
+                            // El estado del servicio se ha actualizado correctamente
+                            Swal.fire({
+                                title: 'Servicio finalizado',
+                                text: 'El servicio ha sido finalizado correctamente.',
+                                icon: 'success'
+                            });
+                            // Aquí puedes realizar otras acciones después de finalizar el servicio si es necesario
+                        },
+                        error: function(error) {
+                            // Ha ocurrido un error al intentar finalizar el servicio
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Se produjo un error al finalizar el servicio. Por favor, inténtelo de nuevo más tarde.',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function editProject(inter) {
+            let TextInfo = "";
+            let showInput = true;
+        
+            switch (inter) {
+                case 1:
+                    TextInfo = "¿Qué nombre vas a actualizar?";
+                    break;
+                case 2:
+                    TextInfo = "¿Qué dominio vas a actualizar?";
+                    break;
+                case 3:
+                    TextInfo = "¿Cuál es el nuevo PayPal Client ID?";
+                    break;
+                case 4:
+                    TextInfo = "¿Cuál es el nuevo PayPal Client Secret?";
+                    break;
+                case 5:
+                    TextInfo = "¿Cuál es el nuevo Email Host User?";
+                    break;
+                case 6:
+                    TextInfo = "¿Cuál es el nuevo Email Host Password?";
+                    break;
+                case 7:
+                    TextInfo = "¿Qué modo de producción de PayPal escoges?";
+                    showInput = false;
+                    break;
+                case 8:
+                    TextInfo = "¿Qué dirección de recursos vas a designar?";
+                    break;
+                case 9:
+                    TextInfo = "¿Qué dirección de productos vas a designar?";
+                    break;
+                default:
+                    TextInfo = "Mensaje por defecto";
+            }
+        
+            if (showInput) {
+                Swal.fire({
+                    title: TextInfo,
+                    input: 'text',
+                    inputPlaceholder: 'Nuevo valor',
+                    showCancelButton: true,
+                    confirmButtonText: 'Aplicar',
+                    cancelButtonText: 'Cancelar',
+                    cancelButtonColor: '#d33',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (valor) => {
+                        if (!valor) {
+                            Swal.showValidationMessage('Operación cancelada, sin contenido');
+                        }
+                        return valor;
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Actualizar el valor del input directamente
+                        var inputId = `#setting_${inter}`;
+                        $(inputId).val(result.value);
+                        // Aquí puedes llamar a la función que guarda los cambios en el backend
+                        actualizarConfiguracion(inter, result.value);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: TextInfo,
+                    showCancelButton: true,
+                    showConfirmButton: false,
+                    cancelButtonText: 'Cancelar',
+                    cancelButtonColor: '#d33',
+                    html: '<button id="sandboxBtn" class="paypal-btn">Sandbox</button>' +
+                        '<button id="liveBtn" class="paypal-btn">Live</button>'
+                });
+        
+                // Agregar eventos de clic a los botones Sandbox y Live
+                document.getElementById('sandboxBtn').addEventListener('click', function () {
+                    // Actualizar el valor del input directamente
+                    var inputId = `#setting_${inter}`;
+                    $(inputId).val('sandbox');
+                    // Aquí puedes llamar a la función que guarda los cambios en el backend
+                    actualizarConfiguracion(inter, 'sandbox');
+                    Swal.close();
+                });
+        
+                document.getElementById('liveBtn').addEventListener('click', function () {
+                    // Actualizar el valor del input directamente
+                    var inputId = `#setting_${inter}`;
+                    $(inputId).val('live');
+                    // Aquí puedes llamar a la función que guarda los cambios en el backend
+                    actualizarConfiguracion(inter, 'live');
+                    Swal.close();
+                });
+            }
+        }
+
+        function actualizarConfiguracion(id, valtext) {
+            event.preventDefault();
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            var data_input = '';
+            
+            // Hacer la petición AJAX
+            $.ajax({
+                url: `/admin/SetSettingProject/${id}/`,
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    data_input: valtext,
+                    mode: valtext ? 'Live' : 'Sandbox' // Agregar el modo al dato enviado
+                },
+                success: function(response) {
+                    // Manejar la respuesta exitosa
+                    if(id < 3)
+                    {
+                        Swal.fire({
+                            title: '¡Éxito!',
+                            text: response.mensaje,
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                    else
+                    {
+                        Swal.fire({
+                            title: 'Listo!',
+                            text: "Require reiniciar el servidor para poder aplicar los cambios",
+                            icon: 'info',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Manejar errores
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: 'Hubo un error al actualizar la configuración',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        }
+        
 
     </script>
 </html>
