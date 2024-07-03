@@ -11,7 +11,7 @@ Instalación:
 -Tenienod instalado Python, Github y ENV, escribibos los siguientes codigos:
   - pip install git+https://github.com/Usuario/Proyecto   | para descargar e instalar el proyecto se usa este comando en el CMD para Windows y Bash para linux, usa la dirección URL de este repositorio
   - una vez instalado accede a la carpeta con "ls" para saber el nombre de la carpeta y con "cd [nombre de carpeta]" para acceder
-  - python -m venv <env>  | Para instalar el entorno de desarollo (env) en el que se utilizaran paquetes de python propios
+  - python -m venv env  | Para instalar el entorno de desarollo (env) en el que se utilizaran paquetes de python propios
   - pip install requirements.txt  | primero tiene que abrir la carpeta del proyecto donde se encuentra el archivo requrements.txt para instalar todos los paquetes necesarios
 -Instalado todo el proyecto, tiene que cambiar la configuración del archivo "[proyecto/ZeusPlataform/setting.py]" en la sección de la base de datos, ajusta la configuración de acuerdo a la base de dats que tiene instalado de forma local o en AWS
 -Una vez esta la base de datos conectada al proyecto se realiza los siguientes codigos para preparar el entorno de la plataforma:
